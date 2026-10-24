@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enquiry cart | Earthens</title>
+<meta name="description" content="Review your selected Earthens products and send an enquiry for a quote.">
+<meta property="og:title" content="Enquiry cart | Earthens">
+<meta property="og:description" content="Review your selected Earthens products and send an enquiry for a quote.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#35523A">
+<link rel="stylesheet" href="styles.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="topbar">Shipping worldwide from Tumkur, India</div>
+<header class="site-header wrap">
+  <a class="logo" href="index.html" aria-label="Earthens home"><img src="assets/logo.jpg" alt="Earthens, foodware for nature lovers" width="80" height="64"></a>
+  <nav class="desk-nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="store.html">Store</a>
+      <a href="index.html#story">Our story</a>
+      <a href="index.html#quality">Quality</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <a class="cart-pill" href="cart.html" data-cart-link aria-label="Enquiry cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span class="label">Enquiry cart</span><span data-cart-count>0</span>
+    </a>
+    <details class="mob-menu">
+      <summary aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+      <div class="panel">
+        <a href="index.html">Home</a>
+        <a href="store.html">Store</a>
+        <a href="index.html#story">Our story</a>
+        <a href="index.html#quality">Quality</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </details>
+  </div>
+</header>
+<main class="wrap page-end">
+  <div class="cart-head">
+    <a class="crumb" href="store.html">← Continue browsing</a>
+    <h1>Your enquiry cart</h1>
+    <p>Choose quantities, tell us where to ship, and we will send a quote. No payment is taken here.</p>
+  </div>
+
+  <div class="cart-layout" data-cart-view hidden>
+    <section class="cart-items" aria-label="Items">
+      <div data-cart-list></div>
+      <div style="border-top:1px solid var(--line2);padding-top:20px"><a class="btn btn-ghost btn-sm" href="store.html">+ Add more products</a></div>
+    </section>
+    <form class="summary" data-cart-form novalidate aria-label="Enquiry details">
+      <h2>Enquiry summary</h2>
+      <div class="srow"><span>Products</span><b data-sum-lines>0</b></div>
+      <div class="srow"><span>Total cartons</span><b data-sum-cartons>0</b></div>
+      <div class="srow"><span>Pricing</span><b>Shared in your quote</b></div>
+      <div class="rule"></div>
+      <div class="field"><label for="co">Company</label><input id="co" type="text" autocomplete="organization"></div>
+      <div class="field"><label for="em">Email</label><input id="em" type="email" autocomplete="email" inputmode="email" data-required><span class="error">Please enter a valid email.</span></div>
+      <div class="field"><label for="ct">Destination country</label>
+        <select id="ct" data-required><option value="">Select a country</option><option>France</option><option>Germany</option><option>Netherlands</option><option>United Kingdom</option><option>United States</option><option>Other</option></select>
+        <span class="error">Please choose a country.</span></div>
+      <div class="field"><label for="nt">Notes (custom sizes, branding, timing)</label><textarea id="nt"></textarea></div>
+      <button class="btn btn-primary btn-block" type="submit" style="min-height:54px">Send enquiry</button>
+      <p class="muted" style="font-size:13px">Quotes are prepared by our export team. No payment is taken now.</p>
+    </form>
+  </div>
+
+  <div class="empty" data-empty-view hidden>
+    <h2>Your enquiry cart is empty</h2>
+    <p>Browse the range and add the pieces you need.</p>
+    <a class="btn btn-primary" href="store.html">Explore the range</a>
+  </div>
+
+  <div class="done" data-done-view hidden>
+    <svg width="52" height="52" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20C4 10 10 4 20 4c0 10-6 16-16 16z" fill="#35523A"/><path d="M4 20L14 10" stroke="#FBF9F4" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <h2>Thank you, your enquiry is on its way.</h2>
+    <p>We will reply with a quote for your market. In the meantime, you can keep exploring the range.</p>
+    <a class="btn btn-primary" href="index.html">Back to home</a>
+  </div>
+</main>
+<footer class="site-footer wrap" id="contact">
+  <div class="col">
+    <img src="assets/logo.jpg" alt="Earthens, foodware for nature lovers" width="85" height="68">
+    <small>Exported by Engee Incorporated.<br>GST 29AKEPA2875R1ZK</small>
+  </div>
+  <div class="col"><strong>Products</strong>
+    <a href="store.html?cat=Bowls">Bowls</a><a href="store.html?cat=Plates">Plates</a><a href="store.html?cat=Compartment%20plates">Compartment plates</a><a href="store.html?cat=Spoons">Spoons</a></div>
+  <div class="col"><strong>Company</strong>
+    <a href="index.html#story">Our story</a><a href="index.html#quality">Quality</a><a href="contact.html">Contact</a></div>
+  <div class="col"><strong>Visit us</strong>
+    <span class="muted">39C-2, Hirehalli Industrial Area, Manchakalkuppe, Hirehalli, Tumkur, Karnataka 572168, India</span></div>
+</footer>
+</body>
+</html>
