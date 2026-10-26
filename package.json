@@ -1,0 +1,16 @@
+{
+  "name": "earthens-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Earthens static website: plain HTML, CSS and JavaScript, hosted on GitHub Pages.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "serve": "python3 -m http.server 8080",
+    "verify": "npm run build && npm run check"
+  }
+}

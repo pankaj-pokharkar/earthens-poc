@@ -1,0 +1,40 @@
+# CI: runs on every push and pull request.
+#  1. Rebuilds the generated HTML and fails if it differs from what was committed
+#     (catches "forgot to run npm run build").
+#  2. Runs the quality checks (scripts/check.mjs).
+#  3. Runs Lighthouse on key pages and fails below the budgets in lighthouserc.json.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build
+        run: npm run build
+
+      - name: Generated files are committed
+        run: |
+          # sitemap.xml lastmod and the footer year change daily/yearly, so ignore those.
+          git diff --exit-code -- . ':!sitemap.xml' || (echo "::error::Run 'npm run build' and commit the result." && exit 1)
+
+      - name: Quality checks
+        run: npm run check
+
+      - name: Lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true

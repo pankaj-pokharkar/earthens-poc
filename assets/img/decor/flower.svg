@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<defs><filter id="f" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3"/></filter></defs>
+<g filter="url(#f)">
+<g fill="#E8527A">
+<ellipse cx="50" cy="27" rx="14" ry="24"/>
+<ellipse cx="50" cy="27" rx="14" ry="24" transform="rotate(72 50 50)"/>
+<ellipse cx="50" cy="27" rx="14" ry="24" transform="rotate(144 50 50)"/>
+<ellipse cx="50" cy="27" rx="14" ry="24" transform="rotate(216 50 50)"/>
+<ellipse cx="50" cy="27" rx="14" ry="24" transform="rotate(288 50 50)"/>
+</g>
+<g fill="#F58AA6"><ellipse cx="50" cy="30" rx="6" ry="14"/><ellipse cx="50" cy="30" rx="6" ry="14" transform="rotate(72 50 50)"/><ellipse cx="50" cy="30" rx="6" ry="14" transform="rotate(144 50 50)"/><ellipse cx="50" cy="30" rx="6" ry="14" transform="rotate(216 50 50)"/><ellipse cx="50" cy="30" rx="6" ry="14" transform="rotate(288 50 50)"/></g>
+<circle cx="50" cy="50" r="8" fill="#F6C531"/>
+</g>
+</svg>

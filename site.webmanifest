@@ -1,0 +1,28 @@
+{
+  "name": "Earthens — foodware for nature lovers",
+  "short_name": "Earthens",
+  "description": "Earthens makes premium, 100% natural Areca palm leaf plates, bowls and party packs in Tumkur, Karnataka. Compostable, chemical-free tableware, exported worldwide.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbf5e6",
+  "theme_color": "#1f4a2c",
+  "icons": [
+    {
+      "src": "assets/img/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
