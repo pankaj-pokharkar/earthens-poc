@@ -20,7 +20,7 @@ npm run check     # quality gate (SEO tags, a11y basics, CSP, broken links)
 npm run verify    # build + check — run this before every commit
 ```
 
-Requires **Node 18+** for the build and check scripts, and Python 3 for `npm run serve`. Visitors only ever download static files.
+Requires **Node 18+** for the build, check and preview scripts (no other tools). `npm run serve` behaves like the live host: clean URLs such as `/our-story` work, and unknown paths show our `404.html`. Visitors only ever download static files.
 
 ---
 

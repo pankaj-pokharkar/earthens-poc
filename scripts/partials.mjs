@@ -160,7 +160,7 @@ export function head(page, r = '', extraLd = []) {
   const pre = page.preload;
   return `
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+${page.key === 'notfound' ? `<base href="${esc(SITE.basePath)}">\n` : ''}<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="${esc(csp())}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>${esc(page.title)}</title>
@@ -184,7 +184,7 @@ ${indexable ? `<link rel="canonical" href="${esc(url)}">` : '<meta name="robots"
 <link rel="manifest" href="${r}site.webmanifest">
 <link rel="preload" href="${r}assets/fonts/fraunces-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${r}assets/fonts/dm-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-${pre ? `<link rel="preload" as="image" type="image/webp" href="${r}${esc(pre.src)}"${pre.srcset ? ` imagesrcset="${esc(pre.srcset.replace(/assets\//g, `${r}assets/`))}" imagesizes="${esc(pre.sizes)}"` : ''} fetchpriority="high">\n` : ''}<link rel="stylesheet" href="${r}assets/css/styles.css">
+${[].concat(pre || []).map((p) => `<link rel="preload" as="image" type="image/webp" href="${r}${esc(p.src)}"${p.srcset ? ` imagesrcset="${esc(p.srcset.replace(/assets\//g, `${r}assets/`))}" imagesizes="${esc(p.sizes)}"` : ''}${p.media ? ` media="${esc(p.media)}"` : ''} fetchpriority="high">\n`).join('')}<link rel="stylesheet" href="${r}assets/css/styles.css">
 <script type="module" src="${r}assets/js/main.js"></script>
 ${structuredData(page, extraLd)}
 `;
@@ -518,7 +518,13 @@ ${VIDEOS.map((v) => `  <li>
 }
 
 export function reviews() {
-  const stars = Array.from({ length: 5 }, (_, i) => `<span class="star${i < Math.floor(REVIEWS.rating) || i < REVIEWS.rating ? '' : ' star--off'}">${icon(i + 1 > REVIEWS.rating && i < REVIEWS.rating ? 'star-half' : 'star')}</span>`).join('');
+  const full = Math.floor(REVIEWS.rating);
+  const half = REVIEWS.rating - full >= 0.5;
+  const stars = Array.from({ length: 5 }, (_, i) => {
+    if (i < full) return `<span class="star">${icon('star-fill')}</span>`;
+    if (i === full && half) return `<span class="star">${icon('star-half')}</span>`;
+    return `<span class="star star--off">${icon('star')}</span>`;
+  }).join('');
   return `
 <div class="review-wrap">
   <div class="rating-card">

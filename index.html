@@ -27,7 +27,8 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/fraunces-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/dm-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" type="image/webp" href="assets/img/hero-scene-1000.webp" imagesrcset="assets/img/hero-scene-640.webp 640w, assets/img/hero-scene-800.webp 800w, assets/img/hero-scene-1000.webp 1000w, assets/img/hero-scene-1600.webp 1600w" imagesizes="(min-width: 70em) 56vw, calc(100vw - 2.5rem)" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" href="assets/img/hero-scene-1000.webp" imagesrcset="assets/img/hero-scene-640.webp 640w, assets/img/hero-scene-800.webp 800w, assets/img/hero-scene-1000.webp 1000w" imagesizes="calc(100vw - 2.5rem)" media="(max-width: 69.99em)" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" href="assets/img/hero-wide-1920.webp" imagesrcset="assets/img/hero-wide-1280.webp 1280w, assets/img/hero-wide-1920.webp 1920w, assets/img/hero-wide-2560.webp 2560w" imagesizes="100vw" media="(min-width: 70em)" fetchpriority="high">
 <link rel="stylesheet" href="assets/css/styles.css">
 <script type="module" src="assets/js/main.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.earthens.in/#organization","name":"Earthens","slogan":"Good Food. Great Company. Happier Planet.","description":"Earthens makes premium, 100% natural Areca palm leaf plates, bowls and party packs in Tumkur, Karnataka. Compostable, chemical-free tableware, exported worldwide.","url":"https://www.earthens.in/","logo":"https://www.earthens.in/assets/img/logo.png","foundingDate":"2016","numberOfEmployees":{"@type":"QuantitativeValue","minValue":51,"maxValue":100},"address":{"@type":"PostalAddress","streetAddress":"39C-2, Hirehalli Industrial Area, Manchakalkuppe, Hirehalli","addressLocality":"Tumkur","addressRegion":"Karnataka","postalCode":"572168","addressCountry":"IN"},"email":"sales@earthens.in","telephone":"+91 98270 09796","contactPoint":{"@type":"ContactPoint","contactType":"sales","telephone":"+91 98270 09796","email":"sales@earthens.in","areaServed":"Worldwide","availableLanguage":["English","Hindi"]},"award":["Women Leader of the Year, BW Emerging Business Summit & Awards (2025)","Empowerment Achievement Award, Karnataka MSME Awards, Global Investors Meet (2025)","Outstanding Entrepreneur Award, COSIDICI National Awards (2023)"],"sameAs":["https://www.instagram.com/earthens_foodware","https://www.youtube.com/@Earthens_foodware","https://www.facebook.com/share/1WVrUJqKCJ/","https://www.exportersindia.com/earthens-tumkur/","https://www.indianyellowpages.com/tumkur/earthens-hirehalli-tumkur-3543166/"],"knowsAbout":["Areca palm leaf tableware","Compostable plates","Biodegradable dinnerware","Eco-friendly party supplies"]},{"@type":"WebSite","@id":"https://www.earthens.in/#website","url":"https://www.earthens.in/","name":"Earthens","publisher":{"@id":"https://www.earthens.in/#organization"},"inLanguage":"en-IN"}]}</script>
@@ -71,10 +72,15 @@
       </div>
     </div>
     <div class="hero__art">
-      <img src="assets/img/hero-scene-1000.webp"
-           srcset="assets/img/hero-scene-640.webp 640w, assets/img/hero-scene-800.webp 800w, assets/img/hero-scene-1000.webp 1000w, assets/img/hero-scene-1600.webp 1600w"
-           sizes="(min-width: 70em) 56vw, calc(100vw - 2.5rem)" width="1000" height="863" fetchpriority="high" decoding="async"
-           alt="Hand-painted South Indian village: a gopuram temple among coconut palms, cows grazing and a lotus pond">
+      <picture>
+        <source media="(min-width: 70em)"
+                srcset="assets/img/hero-wide-1280.webp 1280w, assets/img/hero-wide-1920.webp 1920w, assets/img/hero-wide-2560.webp 2560w"
+                sizes="100vw" width="2560" height="1066">
+        <img src="assets/img/hero-scene-1000.webp"
+             srcset="assets/img/hero-scene-640.webp 640w, assets/img/hero-scene-800.webp 800w, assets/img/hero-scene-1000.webp 1000w"
+             sizes="calc(100vw - 2.5rem)" width="1000" height="863" fetchpriority="high" decoding="async"
+             alt="Hand-painted South Indian village: a gopuram temple among coconut palms, cows grazing and a lotus pond">
+      </picture>
     </div>
   </section>
 
@@ -253,7 +259,7 @@
 <div class="review-wrap">
   <div class="rating-card">
     <p class="rating-card__score"><strong>4.5</strong><span>out of 5</span></p>
-    <p class="stars" role="img" aria-label="Rated 4.5 out of 5"><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star"></use></svg></span><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star"></use></svg></span><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star"></use></svg></span><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star"></use></svg></span><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star-half"></use></svg></span></p>
+    <p class="stars" role="img" aria-label="Rated 4.5 out of 5"><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star-fill"></use></svg></span><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star-fill"></use></svg></span><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star-fill"></use></svg></span><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star-fill"></use></svg></span><span class="star"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#star-half"></use></svg></span></p>
     <p class="small">30 buyer ratings on <a href="https://www.exportersindia.com/earthens-tumkur/" target="_blank" rel="noopener noreferrer">ExportersIndia<span class="sr-only"> (opens in a new tab)</span></a></p>
   </div>
   <ul class="quote-list" role="list">

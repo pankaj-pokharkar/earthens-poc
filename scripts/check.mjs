@@ -10,6 +10,7 @@
  *   - links to a local file that does not exist
  *   - opens a new tab without rel="noopener"
  *   - still contains an empty, un-built partial marker
+ * and when styles.css has unbalanced braces (a stray "}" silently drops the rule after it).
  *
  * It is intentionally simple (regex based). For deeper audits use Lighthouse.
  */
@@ -56,8 +57,8 @@ for (const file of files) {
     if (!/rel="[^"]*noopener/.test(tag)) fail(file, `target=_blank without rel=noopener: ${tag.slice(0, 80)}`);
   }
 
-  // Local links and assets must exist.
-  for (const [, url] of body.matchAll(/\s(?:href|src)="([^"]+)"/g)) {
+  // Local links and assets must exist. (<base href> on 404.html is the site root, not a link.)
+  for (const [, url] of body.replace(/<base\b[^>]*>/g, '').matchAll(/\s(?:href|src)="([^"]+)"/g)) {
     if (/^(https?:|mailto:|tel:|#|data:)/.test(url)) continue;
     const local = url.split(/[?#]/)[0];
     if (local && !(await exists(path.join(ROOT, path.dirname(file), local)))) fail(file, `broken local link: ${url}`);
@@ -68,6 +69,21 @@ for (const file of files) {
       if (!(await exists(path.join(ROOT, path.dirname(file), local)))) fail(file, `broken srcset entry: ${local}`);
     }
   }
+}
+
+// Stylesheet: braces must balance, outside comments and strings.
+{
+  const css = (await readFile(path.join(ROOT, 'assets/css/styles.css'), 'utf8'))
+    .replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, ' '))
+    .replace(/"[^"\n]*"|'[^'\n]*'/g, (m) => ' '.repeat(m.length));
+  let depth = 0;
+  css.split('\n').forEach((line, i) => {
+    for (const c of line) {
+      if (c === '{') depth++;
+      else if (c === '}' && --depth < 0) { fail('assets/css/styles.css', `stray "}" on line ${i + 1}`); depth = 0; }
+    }
+  });
+  if (depth > 0) fail('assets/css/styles.css', `${depth} unclosed "{"`);
 }
 
 if (errors.length) {

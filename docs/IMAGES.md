@@ -7,7 +7,8 @@ Export every photo as **WebP** (quality 70–80), keep the file names below, and
 | Logo (master) | print, partners | the vector logo | — | `assets/img/logo.svg` |
 | Logo (site) | header, footer | full logo with the lady, transparent | 420 × 350 | `assets/img/logo.webp` |
 | Social share | WhatsApp / LinkedIn / Facebook previews | the "Nature's Table. Naturally." banner | 1200 × 630 | `assets/img/og-image.jpg` |
-| Home hero | right side of the Home hero | temple scene **without text** (ask the illustrator for a text-free version) | 1600 / 1000 / 800 / 640 wide | `assets/img/hero-scene-*.webp` |
+| Home hero (mobile) | under the Home hero text, below 1120 px | temple scene, square-ish | 1000 / 800 / 640 wide | `assets/img/hero-scene-*.webp` |
+| Home hero (desktop) | full-width panorama behind the Home hero text, 1120 px and up | the Gopuram Vatika panorama **without text**. The current file has the original lettering painted out by script (some soft haze bottom-left); swap in a clean text-free export from the designer when available | 2560 / 1920 / 1280 wide (3884:1618) | `assets/img/hero-wide-*.webp` |
 | Category circles | Home "Explore Our Range", product filter | one illustrated item per category on a pastel circle | 240 × 240 | `assets/img/categories/*.webp` |
 | Product photos | product cards and product pages | **square** photo of a single piece on a plain cream background, soft shadow | 800 × 800 | `assets/img/products/<product-id>.webp`, then set `image:` in `catalog.js` |
 | EcoBhoj box | Home banner, EcoBhoj page | the 3D box render | 640 / 900 / 1200 wide | `assets/img/ecobhoj-box-*.webp` |

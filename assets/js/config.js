@@ -25,6 +25,11 @@ export const SITE = Object.freeze({
     'Earthens makes premium, 100% natural Areca palm leaf plates, bowls and party packs in Tumkur, Karnataka. Compostable, chemical-free tableware, exported worldwide.',
   /** Production origin, no trailing slash. Drives canonical URLs, sitemap and Open Graph. */
   url: 'https://www.earthens.in',
+  /**
+   * Path the site is served from, with slashes: '/earthens-poc/' on the GitHub Pages preview,
+   * '/' once it runs on its own domain. The 404 page uses it, because it can be shown at any depth.
+   */
+  basePath: '/earthens-poc/',
   locale: 'en_IN',
   foundingYear: 2016,
   employees: '51-100',
@@ -156,7 +161,7 @@ export const STORAGE_KEYS = Object.freeze({
  *   icon / tint  nav bubble icon (icons.svg) and colour (.tint-* in styles.css)
  *   sitemap      priority 0–1, or false to exclude (adds noindex)
  *   feature      only shown when that FEATURES flag is on
- *   preload      LCP image: { src, srcset, sizes }
+ *   preload      LCP image: { src, srcset, sizes, media? }, or an array of them for art direction
  * Product detail pages (products/*.html) are generated from catalog.js, not listed here.
  */
 export const PAGES = Object.freeze([
@@ -164,11 +169,21 @@ export const PAGES = Object.freeze([
     key: 'home', file: 'index.html', label: 'Home', icon: 'home', tint: 'green', nav: true, sitemap: 1.0,
     title: 'Earthens | Natural Areca Palm Leaf Plates & Bowls from India',
     description: 'Premium, 100% natural Areca palm leaf plates, bowls and party packs, made from fallen leaves by 48 women artisans in Tumkur, India. Compostable and chemical-free.',
-    preload: {
-      src: 'assets/img/hero-scene-1000.webp',
-      srcset: 'assets/img/hero-scene-640.webp 640w, assets/img/hero-scene-800.webp 800w, assets/img/hero-scene-1000.webp 1000w, assets/img/hero-scene-1600.webp 1600w',
-      sizes: '(min-width: 70em) 56vw, calc(100vw - 2.5rem)',
-    },
+    // Art-directed hero: square-ish scene on mobile, the full-width panorama on desktop.
+    preload: [
+      {
+        media: '(max-width: 69.99em)',
+        src: 'assets/img/hero-scene-1000.webp',
+        srcset: 'assets/img/hero-scene-640.webp 640w, assets/img/hero-scene-800.webp 800w, assets/img/hero-scene-1000.webp 1000w',
+        sizes: 'calc(100vw - 2.5rem)',
+      },
+      {
+        media: '(min-width: 70em)',
+        src: 'assets/img/hero-wide-1920.webp',
+        srcset: 'assets/img/hero-wide-1280.webp 1280w, assets/img/hero-wide-1920.webp 1920w, assets/img/hero-wide-2560.webp 2560w',
+        sizes: '100vw',
+      },
+    ],
   },
   {
     key: 'story', file: 'our-story.html', label: 'Our Story', icon: 'leaf', tint: 'peach', nav: true, sitemap: 0.7,
