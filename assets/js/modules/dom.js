@@ -28,6 +28,13 @@ export function el(tag, attrs = {}, text) {
   return node;
 }
 
+/**
+ * Turn a site-root path ("assets/img/x.svg") into a URL that works from any page,
+ * including pages in sub-folders (products/…) and GitHub Pages project sites.
+ * This file lives at assets/js/modules/, so the site root is three levels up.
+ */
+export const fromRoot = (sitePath) => new URL(`../../../${sitePath}`, import.meta.url).href;
+
 /** Build an <svg><use></svg> icon from the sprite. */
 export function icon(id) {
   const ns = 'http://www.w3.org/2000/svg';
@@ -35,7 +42,7 @@ export function icon(id) {
   svg.setAttribute('class', 'icon');
   svg.setAttribute('aria-hidden', 'true');
   const use = document.createElementNS(ns, 'use');
-  use.setAttribute('href', `assets/img/icons.svg#${id}`);
+  use.setAttribute('href', `${fromRoot('assets/img/icons.svg')}#${id}`);
   svg.append(use);
   return svg;
 }

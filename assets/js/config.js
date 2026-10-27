@@ -1,81 +1,138 @@
 /**
- * config.js — the ONE place for site-wide constants.
+ * config.js — the ONE place for site-wide settings and business facts.
  *
- * Used in two places:
- *   1. In the browser, imported by assets/js/main.js (feature flags, form settings, contact links).
- *   2. In Node, imported by scripts/build.mjs (header/footer text, structured data, sitemap).
+ * Change a value here, run `npm run build`, and it updates everywhere:
+ * header, footer, contact page, WhatsApp button, forms, structured data (SEO),
+ * llms.txt and sitemap. Nothing here is repeated in the HTML.
+ *
+ * Companion files (also single sources of truth):
+ *   catalog.js  → product categories, products, prices, export terms
+ *   content.js  → awards, certificates, videos, reviews, FAQs
  *
  * Rules:
- *   - Plain data only. No DOM, no `window`, no side effects, so Node can import it.
- *   - Empty string = "not set yet". Templates and scripts fall back gracefully
- *     (e.g. no WhatsApp number -> links point to contact.html instead).
- *   - After editing anything used by HTML (names, address, nav, links), run `npm run build`
- *     so the static pages are regenerated.
+ *   - Plain data only (no DOM), so both the browser and Node can import it.
+ *   - Empty string = "not set yet": that link/button is hidden or falls back gracefully.
  */
 
-/** Core business facts. Reused in the footer, JSON-LD structured data and llms.txt. */
+/* ------------------------------------------------------------------ */
+/* 1. Business facts                                                   */
+/* ------------------------------------------------------------------ */
 export const SITE = Object.freeze({
   name: 'Earthens',
   tagline: 'foodware for nature lovers',
   slogan: 'Good Food. Great Company. Happier Planet.',
   description:
     'Earthens makes premium, 100% natural Areca palm leaf plates, bowls and party packs in Tumkur, Karnataka. Compostable, chemical-free tableware, exported worldwide.',
-  /** Production origin, no trailing slash. Used for canonical URLs, sitemap and Open Graph. */
+  /** Production origin, no trailing slash. Drives canonical URLs, sitemap and Open Graph. */
   url: 'https://www.earthens.in',
   locale: 'en_IN',
   foundingYear: 2016,
   employees: '51-100',
+  artisans: 48,
   ceo: 'Ms. Dipti Goyal',
   exporter: 'Engee Incorporated',
   gst: '29AKEPA2875R1ZK',
-  address: Object.freeze({
+  businessType: 'Manufacturer, exporter & supplier',
+  legalStatus: 'Sole proprietorship',
+  markets: 'Worldwide, including the USA, Europe and Russia',
+});
+
+/** Addresses. The first one is the main address used in structured data and the footer. */
+export const OFFICES = Object.freeze([
+  {
+    label: 'Factory',
+    name: 'Earthens',
     street: '39C-2, Hirehalli Industrial Area, Manchakalkuppe, Hirehalli',
     city: 'Tumkur',
     region: 'Karnataka',
     postalCode: '572168',
     countryCode: 'IN',
     countryName: 'India',
-  }),
-});
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Earthens+Hirehalli+Industrial+Area+Tumkur+572168',
+  },
+  {
+    label: 'Corporate office',
+    name: 'Engee Incorporated',
+    street: 'B-170, Shahpura',
+    city: 'Bhopal',
+    region: 'Madhya Pradesh',
+    postalCode: '462039',
+    countryCode: 'IN',
+    countryName: 'India',
+    mapsUrl: '',
+  },
+]);
 
+/* ------------------------------------------------------------------ */
+/* 2. Contact channels                                                  */
+/* ------------------------------------------------------------------ */
 /**
- * Contact channels. Leave empty until real values are available.
- *   whatsapp: international format, digits only, no "+" (e.g. '919876543210')
- *   phone:    display format with country code (e.g. '+91 98765 43210')
+ *   whatsapp: international format, digits only, no "+" (turns on the floating
+ *             WhatsApp button, WhatsApp tiles and the form fallback)
+ *   phones:   shown in order; the first one is the main "Call us" number
  */
 export const CONTACT = Object.freeze({
-  whatsapp: '',
-  phone: '',
-  email: '',
-  /** Google Maps share link for "Get directions". */
-  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Earthens+Hirehalli+Industrial+Area+Tumkur',
+  person: 'Mr. Nilesh Goyal',
+  whatsapp: '919827009796',
+  whatsappGreeting: 'Hello Earthens! I found your website and I am interested in your products.',
+  phones: Object.freeze([
+    { label: 'Sales', number: '+91 98270 09796' },
+    { label: 'Sales', number: '+91 88793 41461' },
+    { label: 'Sales', number: '+91 99679 77943' },
+  ]),
+  email: 'sales@earthens.in',
+  /** Printed on the EcoBhoj box for feedback and complaints. */
+  supportEmail: 'info@earthens.in',
 });
 
-/** Social profiles (full https URLs). Empty ones are hidden from the footer. */
-export const SOCIAL = Object.freeze({
-  instagram: '',
-  facebook: '',
-  youtube: '',
-});
+/* ------------------------------------------------------------------ */
+/* 3. Social profiles & listings                                        */
+/* ------------------------------------------------------------------ */
+/**
+ * Add any network here. Empty `url` = hidden. `icon` must exist in assets/img/icons.svg.
+ * Every filled URL is also added to the Organization `sameAs` structured data,
+ * which helps Google and AI assistants recognise the company.
+ */
+export const SOCIAL = Object.freeze([
+  { name: 'Instagram', icon: 'instagram', url: 'https://www.instagram.com/earthens_foodware' },
+  { name: 'YouTube', icon: 'youtube', url: 'https://www.youtube.com/@Earthens_foodware' },
+  { name: 'Facebook', icon: 'facebook', url: 'https://www.facebook.com/share/1WVrUJqKCJ/' },
+  { name: 'LinkedIn', icon: 'linkedin', url: '' },
+  { name: 'X (Twitter)', icon: 'x', url: '' },
+  { name: 'Pinterest', icon: 'pinterest', url: '' },
+  { name: 'Threads', icon: 'threads', url: '' },
+]);
 
-/** External store links. */
+/** Business directory listings (not shown as icons; used in structured data `sameAs`). */
+export const LISTINGS = Object.freeze([
+  'https://www.exportersindia.com/earthens-tumkur/',
+  'https://www.indianyellowpages.com/tumkur/earthens-hirehalli-tumkur-3543166/',
+]);
+
+/** External store links. Empty = the "Order" button goes to the contact form instead. */
 export const STORES = Object.freeze({
   amazonEcoBhoj: '',
 });
 
+/* ------------------------------------------------------------------ */
+/* 4. Feature flags                                                     */
+/* ------------------------------------------------------------------ */
 /**
- * Feature flags. Flip to `true` to switch a feature on across the whole site.
- *   enquiryCart: shows "Add to enquiry" buttons, the header cart icon and enquiry.html.
+ *   enquiryCart: "Add to enquiry" buttons, the header cart icon and enquiry.html
+ *   showPrices:  indicative per-piece prices on product cards and pages
  */
 export const FEATURES = Object.freeze({
   enquiryCart: false,
+  showPrices: true,
 });
 
+/* ------------------------------------------------------------------ */
+/* 5. Forms                                                             */
+/* ------------------------------------------------------------------ */
 /**
- * Form submission.
- *   endpoint: a form backend that accepts JSON POST (e.g. Formspree: 'https://formspree.io/f/abcdwxyz').
- *             When empty, forms fall back to WhatsApp (if CONTACT.whatsapp) or email (if CONTACT.email).
- *   If you set an endpoint on a new domain, also add it to the CSP `connect-src` in every page <head>.
+ *   endpoint: a backend accepting JSON POST (e.g. Formspree 'https://formspree.io/f/abcdwxyz').
+ *             Empty → forms open WhatsApp (CONTACT.whatsapp), else email (CONTACT.email).
+ *             The build adds the endpoint's origin to the Content-Security-Policy automatically.
  */
 export const FORMS = Object.freeze({
   endpoint: '',
@@ -88,35 +145,40 @@ export const STORAGE_KEYS = Object.freeze({
   enquiry: 'earthens.enquiry.v1',
 });
 
+/* ------------------------------------------------------------------ */
+/* 6. Pages                                                             */
+/* ------------------------------------------------------------------ */
 /**
- * Pages of the site, in navigation order. Drives the nav, <head> meta tags,
- * breadcrumbs and sitemap.xml (all generated by `npm run build`).
- *   key:          matches <body data-page="..."> on each page
- *   title:        <title> and og:title. Keep under ~60 characters, most important words first.
- *   description:  meta description. Aim for 140-160 characters, written as a direct answer.
- *   icon:         id in assets/img/icons.svg
- *   tint:         pastel bubble colour; must match a .tint-* class in styles.css
- *   nav:          show in the main navigation
- *   sitemap:      priority 0.0-1.0, or false to exclude (and add noindex)
- *   feature:      only shown when that FEATURES flag is on
- *   preload:      optional LCP image to preload on that page
+ * In navigation order. Drives the nav, <head> tags, breadcrumbs and sitemap.
+ *   key          matches <body data-page="..."> on the page
+ *   title        ≤ 60 characters, most important words first
+ *   description  140–160 characters, written as a direct answer
+ *   icon / tint  nav bubble icon (icons.svg) and colour (.tint-* in styles.css)
+ *   sitemap      priority 0–1, or false to exclude (adds noindex)
+ *   feature      only shown when that FEATURES flag is on
+ *   preload      LCP image: { src, srcset, sizes }
+ * Product detail pages (products/*.html) are generated from catalog.js, not listed here.
  */
 export const PAGES = Object.freeze([
   {
     key: 'home', file: 'index.html', label: 'Home', icon: 'home', tint: 'green', nav: true, sitemap: 1.0,
     title: 'Earthens | Natural Areca Palm Leaf Plates & Bowls from India',
     description: 'Premium, 100% natural Areca palm leaf plates, bowls and party packs, made from fallen leaves by 48 women artisans in Tumkur, India. Compostable and chemical-free.',
-    preload: 'assets/img/hero-scene.webp',
+    preload: {
+      src: 'assets/img/hero-scene-1000.webp',
+      srcset: 'assets/img/hero-scene-640.webp 640w, assets/img/hero-scene-800.webp 800w, assets/img/hero-scene-1000.webp 1000w, assets/img/hero-scene-1600.webp 1600w',
+      sizes: '(min-width: 70em) 56vw, calc(100vw - 2.5rem)',
+    },
   },
   {
     key: 'story', file: 'our-story.html', label: 'Our Story', icon: 'leaf', tint: 'peach', nav: true, sitemap: 0.7,
     title: 'Our Story | Earthens Palm Leaf Tableware',
-    description: 'How a family memory of meals served on leaves became Earthens: a palm leaf tableware maker in Tumkur, Karnataka, employing 48 women and exporting worldwide.',
+    description: 'How a family memory of meals served on leaves became Earthens: an award-winning, women-led palm leaf tableware maker in Tumkur, Karnataka, exporting worldwide.',
   },
   {
     key: 'products', file: 'products.html', label: 'Products', icon: 'plates', tint: 'blue', nav: true, sitemap: 0.9,
-    title: 'Areca Palm Leaf Plates, Bowls, Trays & Spoons | Earthens',
-    description: 'Browse Earthens Areca palm leaf plates, bowls, serving trays, compartment plates and spoons in round and square sizes. Natural, compostable, microwave safe.',
+    title: 'Areca Palm Leaf Plates, Bowls & Spoons | Earthens',
+    description: 'Browse 35 Earthens Areca palm leaf plates, bowls, compartment plates, heart and oval shapes and spoons, with sizes, prices and export details. Compostable.',
   },
   {
     key: 'ecobhoj', file: 'ecobhoj.html', label: 'EcoBhoj', icon: 'gift', tint: 'pink', nav: true, sitemap: 0.9,
@@ -130,13 +192,13 @@ export const PAGES = Object.freeze([
   },
   {
     key: 'certifications', file: 'certifications.html', label: 'Certifications', icon: 'certificate', tint: 'lilac', nav: true, sitemap: 0.6,
-    title: 'Certifications & Quality Checks | Earthens',
-    description: 'Earthens palm leaf tableware is food-grade and checked piece by piece to export standards. See our certificates, quality process and company details.',
+    title: 'Certifications, SGS Tests & Awards | Earthens',
+    description: 'Earthens palm leaf tableware is tested by SGS to global standards and checked piece by piece for export. See our certificates, awards and company details.',
   },
   {
     key: 'contact', file: 'contact.html', label: 'Contact Us', icon: 'mail', tint: 'yellow', nav: true, sitemap: 0.8,
     title: 'Contact Earthens | Bulk Orders, Export & EcoBhoj',
-    description: 'Contact Earthens in Tumkur, Karnataka for bulk palm leaf tableware, export quotes, private label and EcoBhoj party pack orders.',
+    description: 'Contact Earthens in Tumkur, Karnataka on WhatsApp, phone or email for bulk palm leaf tableware, export quotes, private label and EcoBhoj party packs.',
   },
   {
     key: 'enquiry', file: 'enquiry.html', label: 'Enquiry', icon: 'bag', tint: 'dark', nav: true, sitemap: false, feature: 'enquiryCart',

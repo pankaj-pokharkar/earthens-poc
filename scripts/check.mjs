@@ -22,7 +22,11 @@ const errors = [];
 const fail = (file, message) => errors.push(`${file}: ${message}`);
 const exists = (p) => access(p).then(() => true, () => false);
 
-const files = (await readdir(ROOT)).filter((f) => f.endsWith('.html'));
+// Root pages + generated product pages.
+const files = [
+  ...(await readdir(ROOT)).filter((f) => f.endsWith('.html')),
+  ...(await readdir(path.join(ROOT, 'products')).catch(() => [])).filter((f) => f.endsWith('.html')).map((f) => `products/${f}`),
+];
 
 for (const file of files) {
   const html = await readFile(path.join(ROOT, file), 'utf8');
@@ -56,12 +60,12 @@ for (const file of files) {
   for (const [, url] of body.matchAll(/\s(?:href|src)="([^"]+)"/g)) {
     if (/^(https?:|mailto:|tel:|#|data:)/.test(url)) continue;
     const local = url.split(/[?#]/)[0];
-    if (local && !(await exists(path.join(ROOT, local)))) fail(file, `broken local link: ${url}`);
+    if (local && !(await exists(path.join(ROOT, path.dirname(file), local)))) fail(file, `broken local link: ${url}`);
   }
   for (const [, list] of body.matchAll(/\ssrcset="([^"]+)"/g)) {
     for (const candidate of list.split(',')) {
       const local = candidate.trim().split(/\s+/)[0];
-      if (!(await exists(path.join(ROOT, local)))) fail(file, `broken srcset entry: ${local}`);
+      if (!(await exists(path.join(ROOT, path.dirname(file), local)))) fail(file, `broken srcset entry: ${local}`);
     }
   }
 }

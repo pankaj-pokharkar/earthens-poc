@@ -13,11 +13,13 @@ import { initFeatureFlags, isEnabled } from './modules/feature-flags.js';
 import { initProductFilter } from './modules/product-filter.js';
 import { initForms } from './modules/forms.js';
 import { initEnquiry } from './modules/enquiry.js';
+import { initVideos } from './modules/video.js';
 
 initNav();
 initFeatureFlags();
 initProductFilter();
 initForms();
+initVideos();
 
 // The enquiry cart only runs when FEATURES.enquiryCart is true in config.js.
 if (isEnabled('enquiryCart')) initEnquiry();

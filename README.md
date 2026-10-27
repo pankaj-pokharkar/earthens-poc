@@ -2,41 +2,58 @@
 
 The official website of **Earthens**, makers of 100% natural Areca palm leaf tableware and the **EcoBhoj Party Pack**, from Tumkur, Karnataka.
 
-It is a fast, accessible, plain **HTML + CSS + JavaScript** site with no framework and no runtime dependencies, built to be hosted on **GitHub Pages**.
+A fast, accessible, plain **HTML + CSS + JavaScript** site. It has no framework and no runtime dependencies, and is built to be hosted on **GitHub Pages** (or Cloudflare Pages / Netlify).
 
-| Lighthouse (local test) | Performance | Accessibility | Best practices | SEO |
+| Lighthouse (local, gzip) | Performance | Accessibility | Best practices | SEO |
 | --- | --- | --- | --- | --- |
-| Desktop | 100 | 100 | 100 | 100 |
-| Mobile (simulated slow 4G) | 90–98 | 100 | 100 | 100 |
+| Desktop | 99–100 | 100 | 100 | 100 |
+| Mobile (simulated slow 4G) | 90–99 | 100 | 100 | 100 |
 
 ---
 
 ## Quick start
 
 ```bash
-# 1. Run locally (any static server works)
-npm run serve            # → http://localhost:8080
-
-# 2. After editing config, catalog or partials, regenerate the shared HTML
-npm run build
-
-# 3. Check everything before committing
-npm run check            # or: npm run verify  (build + check)
+npm run serve     # preview at http://localhost:8080
+npm run build     # regenerate everything that comes from the data files
+npm run check     # quality gate (SEO tags, a11y basics, CSP, broken links)
+npm run verify    # build + check — run this before every commit
 ```
 
-Requirements: **Node 18+** for the build and check scripts, and Python 3 for `npm run serve` (or use any static server). Visitors only ever download the static files.
+Requires **Node 18+** for the build and check scripts, and Python 3 for `npm run serve`. Visitors only ever download static files.
 
 ---
 
-## Deploy to GitHub Pages
+## Where to change things (single source of truth)
 
-1. Push this folder to a GitHub repository (the files sit at the repo root).
-2. Go to **Settings → Pages → Build and deployment**, choose **Deploy from a branch**, then `main` and `/ (root)`.
-3. The site goes live at `https://<user>.github.io/<repo>/`.
-4. **Custom domain** (for example `www.earthens.in`): add it under Settings → Pages, create a `CNAME` file containing `www.earthens.in`, point your DNS `CNAME` record to `<user>.github.io`, and tick **Enforce HTTPS**.
-5. Make sure `SITE.url` in `assets/js/config.js` matches the live domain, then run `npm run build`. It drives canonical URLs, the sitemap and social previews.
+You never edit the same fact in two places. Change it in **one** file, run `npm run build`, and every page updates.
 
-> All links are relative, so the site also works under a `/<repo>/` sub-path. The only exception is `404.html` on deep URLs; using a custom domain avoids that.
+| File | Owns |
+| --- | --- |
+| `assets/js/config.js` | Business facts, **addresses**, **phones / WhatsApp / email**, **social links**, feature flags, forms, page titles & descriptions |
+| `assets/js/catalog.js` | Categories, **all 35 products + 2 EcoBhoj packs**, **prices**, **export terms** (MOQ, port, payment, packing, shelf life) |
+| `assets/js/content.js` | **Awards**, **certificates (Seal of Trust)**, **videos**, **reviews**, EcoBhoj FAQ |
+| `assets/css/styles.css` | All styling; design tokens (colours, fonts, spacing) at the top |
+| `scripts/partials.mjs` | HTML templates: head, header, footer, product cards, product pages, awards, videos… |
+
+### Common tasks
+
+| I want to… | Edit | Then |
+| --- | --- | --- |
+| Change a phone number, WhatsApp, email | `CONTACT` in `config.js` | `npm run build` |
+| Add a social network (LinkedIn, X, Pinterest…) | fill its `url` in `SOCIAL` (`config.js`) | `npm run build` |
+| Add or edit a product, its price or size | `PRODUCTS` in `catalog.js` | `npm run build` |
+| Change MOQ / port / payment / packing for all products | `EXPORT` in `catalog.js` | `npm run build` |
+| Hide all prices | `FEATURES.showPrices = false` in `config.js` | `npm run build` |
+| Turn on the enquiry cart | `FEATURES.enquiryCart = true` in `config.js` | `npm run build` |
+| Add a certificate PDF | put it in `assets/docs/`, set `file` in `CERTIFICATES` (`content.js`) | `npm run build` |
+| Add an award, video or review | `AWARDS` / `VIDEOS` / `REVIEWS` in `content.js` | `npm run build` |
+| Put the EcoBhoj Amazon link live | `STORES.amazonEcoBhoj` in `config.js` | `npm run build` |
+| Connect forms to email | `FORMS.endpoint` (e.g. a Formspree URL) | `npm run build` (CSP updates automatically) |
+| Replace an illustration with a product photo | set `image: 'assets/img/products/…webp'` on the product | `npm run build` |
+| Add a new page | copy a page, set `<body data-page="key">`, add it to `PAGES` | `npm run build` |
+
+See **`docs/IMAGES.md`** for which photo goes where, at what size.
 
 ---
 
@@ -44,134 +61,74 @@ Requirements: **Node 18+** for the build and check scripts, and Python 3 for `np
 
 ```
 .
-├── index.html, products.html, ecobhoj.html, our-story.html,
-│   sustainability.html, certifications.html, contact.html,
-│   enquiry.html, 404.html          ← pages (hand-written content + generated blocks)
+├── index.html … contact.html, enquiry.html, 404.html   ← pages (your content + generated blocks)
+├── products/<id>.html        ← GENERATED: one page per product (don't edit)
+├── sitemap.xml, robots.txt, llms.txt, site.webmanifest   ← GENERATED
 ├── assets/
-│   ├── css/styles.css              ← THE stylesheet (tokens at the top)
-│   ├── js/
-│   │   ├── config.js               ← THE constants: business facts, contacts, flags, pages
-│   │   ├── catalog.js              ← THE product range
-│   │   ├── main.js                 ← single entry point
-│   │   └── modules/                ← nav, feature flags, product filter, forms, enquiry cart
-│   ├── fonts/                      ← self-hosted woff2 (Fraunces, DM Sans, Kalam; SIL OFL)
-│   └── img/                        ← WebP images, SVG decor, icon sprite, shapes, favicons
-├── scripts/
-│   ├── build.mjs                   ← injects partials, writes sitemap/robots/llms/manifest
-│   ├── partials.mjs                ← <head>, header, footer, product grid, contact tiles
-│   └── check.mjs                   ← quality gate (SEO tags, a11y basics, CSP, broken links)
-├── sitemap.xml, robots.txt, llms.txt, site.webmanifest   ← generated, commit them
-├── _headers                        ← security headers for Netlify / Cloudflare Pages
-└── .github/workflows/ci.yml        ← runs build + check + Lighthouse on every PR
+│   ├── css/styles.css
+│   ├── js/  config.js · catalog.js · content.js · main.js · modules/
+│   ├── img/ logo.svg (master) · logo.webp · hero-scene-*.webp · shapes/ · categories/ · decor/ · icons.svg
+│   ├── fonts/  (self-hosted, SIL OFL)
+│   └── docs/   (certificate PDFs go here)
+├── scripts/  build.mjs · partials.mjs · check.mjs
+├── docs/  IMAGES.md · DECISIONS.md
+└── .github/workflows/ci.yml  ← build + check + Lighthouse on every push/PR
 ```
 
 ### How "reusable" works without a framework
 
-Shared blocks live in **one place** (`scripts/partials.mjs`) and are copied into every page between markers:
+Shared blocks are copied into pages between markers:
 
 ```html
 <!-- @partial header --> …generated… <!-- /@partial header -->
 ```
 
-`npm run build` regenerates these blocks. **Do not hand-edit inside a marker**; it will be overwritten. Everything outside the markers is normal HTML you edit directly.
-
-The generated output is committed, so GitHub Pages serves plain files and needs no build step on the server.
+`npm run build` regenerates them. **Never hand-edit inside a marker.** Everything outside the markers is normal HTML you edit directly. The generated output is committed, so the host serves plain files with no build step.
 
 ---
 
-## Common tasks
+## Deploy
 
-| I want to… | Edit | Then |
-| --- | --- | --- |
-| Change phone, WhatsApp, email, socials | `CONTACT`, `SOCIAL` in `config.js` | `npm run build` |
-| Add or edit a product | `PRODUCTS` in `catalog.js` | `npm run build` |
-| Add a product category | `CATEGORIES` in `catalog.js` (+ a 240×240 WebP in `assets/img/categories/`) | `npm run build` |
-| Change a page title or description | `PAGES` in `config.js` | `npm run build` |
-| Change colours or fonts | tokens at the top of `styles.css` | — |
-| Turn the enquiry cart on | `FEATURES.enquiryCart = true` in `config.js` | `npm run build` |
-| Connect the forms to email | `FORMS.endpoint` (e.g. a Formspree URL) in `config.js` | `npm run build` (adds it to the CSP) |
-| Add a new page | copy a page, give `<body data-page="key">`, add it to `PAGES` | `npm run build` |
-| Replace an illustration with a photo | set `image: 'assets/img/…webp'` on the product | `npm run build` |
+### GitHub Pages (current)
+1. Push to GitHub, then go to **Settings → Pages → Deploy from a branch → `main` / root**.
+2. **Custom domain** `www.earthens.in`: add it in Settings → Pages, add a `CNAME` file containing `www.earthens.in`, point your DNS `CNAME` to `<user>.github.io`, and tick **Enforce HTTPS**.
+3. Keep `SITE.url` in `config.js` equal to the live domain (it drives canonical URLs and the sitemap).
 
-### Feature flag: enquiry cart
-
-`FEATURES.enquiryCart` (default `false`) controls the "Add to enquiry" buttons, the header cart icon and `enquiry.html`. Visitors collect products and send **one** enquiry for a quote. There is no checkout and no payment. The cart is stored only in the visitor's browser (`localStorage`) and is validated on every read.
-
-### Forms
-
-Without a backend, forms fall back in this order: `FORMS.endpoint` (JSON POST) → WhatsApp (`CONTACT.whatsapp`) → email (`CONTACT.email`). Until one is set, submitting shows a friendly error. A free [Formspree](https://formspree.io) form is the quickest way to receive enquiries by email.
+### A fresh start for SEO
+The new site does not redirect old earthens.in URLs; the owner chose a clean start (see `docs/DECISIONS.md`). When it goes live, submit `sitemap.xml` in Google Search Console so the new pages are indexed quickly.
 
 ---
 
-## Code conventions
+## Features
 
-- **HTML**: semantic landmarks (`header`, `nav`, `main`, `footer`), one `<h1>` per page, headings in order, every `img` has `alt` + `width` + `height`.
-- **CSS**: one file, mobile-first, tokens only (no hard-coded colours outside `:root`), BEM-ish class names (`block__element--modifier`). **No inline `style=""`**, because the Content-Security-Policy blocks it.
-- **JS**: ES modules, no build step, no dependencies. Each module has one job and does nothing if its markup is absent. **Never use `innerHTML` with data**; use `el()` / `textContent` from `modules/dom.js`.
-- **Progressive enhancement**: every page works without JavaScript. The menu is a native `<details>`, the product filter falls back to anchor links, and the Round/Square switch is pure CSS.
-- **Comments** explain *why*, not *what*. Each file starts with a short header saying what it owns.
-
----
+- **Products**: 7 categories, filterable without reloading (it still works without JS, as anchor links). Every product has its own page with size, shape, indicative price, a **"Good to know"** perk row, a shipping-label style **export panel** (MOQ, port, payment, shelf life, origin, packing, private label), related products, and **Get a quote** (pre-fills the contact form) / **WhatsApp** (pre-filled message) buttons.
+- **Enquiry cart** (feature flag): "Add to enquiry" on cards and product pages, a header badge, and one enquiry for many products. Stored only in the visitor's browser.
+- **Videos**: thumbnail-only "facade". The YouTube player (~1 MB) loads only when someone presses play, using `youtube-nocookie.com`. Responsive 16:9, keyboard accessible, and it pre-connects on hover so playback starts fast.
+- **Trust**: SGS test reports, IEC, trademark and GST certificates; 3 awards (Home strip, Our Story, Certifications); a 4.5★ rating and quotes.
+- **Contact**: WhatsApp, call and email tiles; both offices; all phone numbers; a floating WhatsApp button; a form with a product picker.
 
 ## Security
-
-- **Content-Security-Policy** (in every `<head>`): only same-origin scripts, styles, fonts and images; no inline scripts or styles; no plugins; forms post only to the same origin (or the configured form endpoint).
-- No third-party scripts, trackers, CDNs or cookies. Fonts are self-hosted, which also helps privacy and GDPR.
-- External links use `rel="noopener noreferrer"`.
-- Form input is length-capped, validated, sent with `credentials: 'omit'`, and protected by a honeypot field. Nothing user-supplied is ever inserted as HTML.
-- GitHub Pages cannot set HTTP headers, so the CSP is a `<meta>` tag. If you move to **Netlify or Cloudflare Pages**, the included `_headers` file adds HSTS, `X-Content-Type-Options`, `frame-ancestors`, `Permissions-Policy` and more.
+- A strict **Content-Security-Policy** in every page: same-origin scripts, styles and fonts only, no inline scripts or styles. The only third parties allowed are YouTube thumbnails and the player, and Google Maps. Set `FORMS.endpoint` and its origin is added automatically.
+- No trackers, cookies or CDNs. Fonts are self-hosted.
+- External links use `rel="noopener noreferrer"`. Nothing a visitor types (or puts in a URL) is ever inserted as HTML: the product pre-fill looks the id up in the catalog, and video ids are validated.
+- `_headers` adds HSTS, `frame-ancestors`, `Permissions-Policy` and more on Cloudflare Pages / Netlify.
 
 ## Accessibility (WCAG 2.2 AA)
+Skip link, visible focus, `aria-current`, labelled fields with inline errors, live announcements (filter, cart), 44px+ targets, AA contrast, `prefers-reduced-motion`, decorative images hidden from screen readers, and whole-card links that keep a single clear link name.
 
-Skip link, visible focus rings, `aria-current` on the active page, labelled form fields with inline error messages, live-region announcements for filtering and cart changes, 44px+ touch targets, AA colour contrast, `prefers-reduced-motion` support, and decorative images hidden from screen readers.
-
-## SEO and AEO (answer-engine optimisation)
-
-- Unique `<title>`, meta description, canonical URL and Open Graph / Twitter tags per page (from `PAGES` in `config.js`).
-- **Structured data (JSON-LD)**: `Organization` on every page, `WebSite` on home, `BreadcrumbList` on inner pages, `Product` + `Offer` + `FAQPage` on EcoBhoj.
-- `sitemap.xml` and `robots.txt`, with AI crawlers (GPTBot, ClaudeBot, PerplexityBot and others) explicitly allowed.
-- **`llms.txt`**: a plain-language fact sheet for AI assistants, generated from `config.js` and `catalog.js`.
-- Content is written answer-first (FAQs, "How to compost", the comparison table) so search snippets and AI answers can quote it directly.
-- Real HTML for every product (generated at build time, not rendered by JS), so crawlers see the full catalogue.
-
-> The EcoBhoj `Product` / `FAQPage` JSON-LD lives in `ecobhoj.html`. If you change the FAQ text or price, update both the visible text and the JSON-LD.
+## SEO & AEO (answer-engine optimisation)
+- Unique titles and descriptions (from `PAGES`, and auto-written for product pages), canonical URLs, Open Graph and Twitter cards.
+- JSON-LD: `Organization` (with awards, contact point, `sameAs` socials and listings), `WebSite`, `BreadcrumbList`, a `Product` + `Offer` on every product page, and `Product` + `FAQPage` on EcoBhoj. All of it is generated from the same data as the visible page, so the two never disagree.
+- `sitemap.xml` (44 URLs), `robots.txt` that welcomes AI crawlers, and **`llms.txt`**: a fact sheet with every product, price and export term for AI assistants.
 
 ## Performance
-
-Self-hosted variable fonts with `font-display: swap` and preloading, WebP images with `srcset`, `width`/`height`, lazy loading below the fold, a high-priority preloaded hero image, a single small CSS file, and about 10 KB of deferred, module-based JS. GitHub Pages serves everything gzipped over HTTP/2 from a CDN.
-
----
-
-## Before launch: placeholders to replace
-
-- [ ] `CONTACT` (WhatsApp, phone, email) and `SOCIAL` links in `config.js`
-- [ ] `FORMS.endpoint` (or a WhatsApp/email fallback)
-- [ ] Amazon listing link for EcoBhoj (`ecobhoj.html#buy`)
-- [ ] Certificates on `certifications.html` (only ones you actually hold, with PDFs in `assets/docs/`)
-- [ ] Photos: artisans, family, the Tumkur unit (search the HTML for `[ Photo`)
-- [ ] Impact numbers on `sustainability.html` (search for `[X]`)
-- [ ] Roles on `our-story.html` (search for `[Role]`)
-- [ ] **High-resolution artwork**: the hero scene and category circles were cut from a concept image (about 500 px wide). Ask your illustrator for the originals at 2× size and replace the WebP files with the same names.
-- [ ] A transparent **SVG logo** (the current logo is a small 150 px image)
-- [ ] Google Search Console + Bing Webmaster Tools: submit `sitemap.xml`
+Self-hosted variable fonts (preloaded, `font-display: swap`), responsive WebP with `srcset` (640/800/1000/1600), a preloaded hero image, lazy loading below the fold, one CSS file, and ~12 KB of deferred module JS. GitHub Pages serves everything gzipped from a CDN.
 
 ---
 
 ## Plain HTML or Astro?
 
-**Plain HTML is a good fit today**: about 9 pages, a small catalogue, a small team, free GitHub Pages hosting, and top Lighthouse scores. The tiny build script gives you shared header/footer and a data-driven product list without a framework.
-
-**Move to [Astro](https://astro.build) when** any of these become true:
-
-- the catalogue grows to individual product pages (one URL per product is great for SEO),
-- you add a blog, recipes or festival campaigns,
-- you need multiple languages (Hindi, Kannada, German, French),
-- non-developers should edit content through a CMS.
-
-Astro outputs the same zero-JS static HTML (so the same Lighthouse scores), but adds components, content collections, automatic image optimisation (AVIF/WebP and resizing) and i18n routing. This codebase migrates cleanly: `styles.css` stays as is, `config.js` and `catalog.js` become content collections, `partials.mjs` becomes `Header.astro` and `Footer.astro`, and the JS modules are reused unchanged. Astro also deploys to GitHub Pages with an official Action.
-
----
+Plain HTML is still a good fit. The build script already gives you shared templates, data-driven product pages and SEO files, with zero dependencies. **Move to Astro** when you add multiple languages, a blog or festival campaigns, or a CMS for non-developers. `styles.css` and the data files carry over unchanged, `partials.mjs` becomes `.astro` components, and the JS modules are reused as is.
 
 ## Licences
-
-Fonts: Fraunces, DM Sans and Kalam, all under the SIL Open Font License 1.1. Illustrations, photos and the logo are © Earthens.
+Fonts: Fraunces, DM Sans and Kalam (SIL Open Font License 1.1). Illustrations, photos and logos © Earthens.

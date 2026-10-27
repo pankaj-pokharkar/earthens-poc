@@ -13,9 +13,16 @@
  *     template#enquiry-item            row template (cloned, filled with textContent)
  *     [data-enquiry-filled] / [data-enquiry-empty]   shown / hidden by item count
  */
-import { STORAGE_KEYS } from '../config.js';
-import { PRODUCTS_BY_ID } from '../catalog.js';
-import { $, $$, announce } from './dom.js';
+import { STORAGE_KEYS, FEATURES } from '../config.js';
+import { PRODUCTS_BY_ID, CATEGORIES_BY_ID, EXPORT } from '../catalog.js';
+import { $, $$, announce, fromRoot } from './dom.js';
+
+/** One-line price/size summary for a cart row. */
+function summary(product) {
+  if (product.mrp) return `${product.size} · ${EXPORT.currencySymbol}${product.mrp.toLocaleString('en-IN')} MRP`;
+  if (FEATURES.showPrices && product.price) return `${product.size} · about ${EXPORT.currencySymbol}${product.price} / ${EXPORT.priceUnit}`;
+  return `${product.size} · price on request`;
+}
 
 const MAX_QTY = 9999;
 
@@ -97,12 +104,12 @@ function renderList(cart) {
       const product = PRODUCTS_BY_ID[id];
       const row = template.content.firstElementChild.cloneNode(true);
       row.dataset.id = id;
-      $('[data-field="category"]', row).textContent = product.category;
+      $('[data-field="category"]', row).textContent = CATEGORIES_BY_ID[product.category]?.name ?? '';
       $('[data-field="name"]', row).textContent = product.name;
-      $('[data-field="size"]', row).textContent = product.price ?? `${product.size} · price on quote`;
+      $('[data-field="size"]', row).textContent = summary(product);
       $('[data-field="qty"]', row).textContent = String(cart[id]);
       const img = $('img', row);
-      img.src = product.image ?? `assets/img/shapes/${product.shape}.svg`;
+      img.src = fromRoot(product.image ?? `assets/img/shapes/${product.art}.svg`);
       img.classList.toggle('is-photo', Boolean(product.image));
       $$('button', row).forEach((b) => b.setAttribute('aria-label', `${b.dataset.action} ${product.name}`));
       return row;

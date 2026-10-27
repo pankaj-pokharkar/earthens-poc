@@ -21,8 +21,21 @@
  *   <div data-form-done hidden> ... thank-you message ... </div>   (next sibling of the form)
  */
 import { CONTACT, FORMS } from '../config.js';
+import { PRODUCTS_BY_ID } from '../catalog.js';
 import { $, $$ } from './dom.js';
 import { getEnquiryLines, clearEnquiry } from './enquiry.js';
+
+/**
+ * "Get a quote" links on product pages open contact.html?product=<id>#message.
+ * We look the id up in the catalog (never trusting the raw URL text) and pre-fill
+ * the product field, so the visitor doesn't have to type it.
+ */
+function prefillProduct(form) {
+  const input = $('[name="product"]', form);
+  const id = new URLSearchParams(window.location.search).get('product');
+  const product = id && PRODUCTS_BY_ID[id];
+  if (input && product && !input.value) input.value = product.name;
+}
 
 const MESSAGES = {
   valueMissing: 'Please fill in this field.',
@@ -155,6 +168,7 @@ async function onSubmit(event) {
 
 export function initForms() {
   $$('form[data-form]').forEach((form) => {
+    prefillProduct(form);
     form.addEventListener('submit', onSubmit);
     // Validate a field when the visitor leaves it, and clear errors as they type.
     form.addEventListener('focusout', (event) => {

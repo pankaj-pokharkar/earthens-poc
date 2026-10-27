@@ -2,3 +2,6 @@ node_modules/
 .lighthouseci/
 .DS_Store
 *.log
+
+# Client design originals (154 MB of PNGs). Export WebP into assets/img instead.
+Earthens New Website Design/
